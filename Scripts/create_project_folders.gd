@@ -1,6 +1,6 @@
 @tool
 extends EditorScript
-class_name SetupProjectScript
+class_name CreateProjectFolders
 
 const proj_dirs := [
 	"res://Entities",
@@ -30,12 +30,11 @@ const folder_colors := {
 func _run() -> void:
 	if generate_directories():
 		color_folders()
-
 	pass
 
 
 func generate_directories() -> bool:
-
+	print("generating folders for project")
 	var result: bool = false
 
 	for d:String in proj_dirs:
@@ -49,12 +48,16 @@ func generate_directories() -> bool:
 			print("Already created %s" % d)
 
 	result = true
-	print_rich("[b]Finished [/b]")
 	EditorInterface.get_resource_filesystem().scan()
+	print_rich("[b]Finished generating folders for project [/b]")
+
 	return result
 
 
 func color_folders() -> void:
+	print_rich("[i]Coloring folder for Project[/i]")
 	ProjectSettings.set_setting("file_customization/folder_colors", folder_colors)
 	EditorInterface.get_resource_filesystem().scan()
+	print_rich("[b]Finished coloring folder for Project [/b]")
+
 	pass
