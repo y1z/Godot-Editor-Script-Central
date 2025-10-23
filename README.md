@@ -1,1 +1,1 @@
-"# Godot-Editor-Script-Central" 
+# Godot-Editor-Script-Central
