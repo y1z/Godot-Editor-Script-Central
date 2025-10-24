@@ -11,16 +11,27 @@ config_version=5
 [application]
 
 config/name="proj"
+run/main_scene="uid://dh0e0uaefb3q3"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [file_customization]
 
 folder_colors={
-"res://Scripts/": "green"
+"res://Entities/": "orange",
+"res://Scenes/": "red",
+"res://Scripts/": "green",
+"res://Sprites/": "yellow",
+"res://Textures/": "purple",
+"res://Themes/": "pink"
 }
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter="Nearest"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
