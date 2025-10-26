@@ -42,7 +42,7 @@ func generate_directories() -> bool:
 			var err := DirAccess.make_dir_recursive_absolute(d)
 
 			if err != OK:
-				push_error("Failed to create: %s (error %d)" % d % err)
+				push_error("Failed to create: %s (error %d)" % [d, err])
 				return result;
 		else:
 			print("Already created %s" % d)
