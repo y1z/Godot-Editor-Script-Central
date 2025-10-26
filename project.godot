@@ -30,6 +30,11 @@ folder_colors={
 "res://Themes/": "pink"
 }
 
+[input_devices]
+
+sensors/enable_gravity=true
+sensors/enable_gyroscope=true
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter="Nearest"
