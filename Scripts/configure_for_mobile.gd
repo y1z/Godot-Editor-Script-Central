@@ -5,6 +5,8 @@ class_name ConfigureForMobile
 const window_title := "configure for mobile"
 const window_size := Vector2i(500, 800)
 
+var top_label :Label = Label.new()
+
 enum MobileSensors {
 	ACCELEROMETER,
 	GRAVITY,
@@ -27,6 +29,12 @@ func _run() -> void:
 		func():
 			window.queue_free()
 	)
+
+	change_label_color(top_label,Color(1.0, 1.0, 1.0, 1.0))
+	change_label_outline(top_label, Color(1.0, 1.0, 1.0, 1.0))
+	change_label_shadow(top_label,Color(0.0, 0.365, 0.702, 1.0))
+
+	
 	add_ui_to_window(window)
 	
 	for sensor in MobileSensors.keys():
@@ -41,11 +49,10 @@ func add_ui_to_window(_window:Window) -> void:
 	var vbox := VBoxContainer.new()
 	var control := Control.new()
 
-	
-	var label := Label.new()
-	label.text = "Note you will have to restart the project if you change any of the settings"
+	top_label.text ="Note you will have to restart the project if you change any of the settings"
 
-	vbox.add_child(label)
+
+	vbox.add_child(top_label)
 	control.add_child(vbox)
 	# for some reason we have to use the MobileSensors.value() to get the VALUE of the desired enum
 	for sensor in MobileSensors.values():
@@ -92,3 +99,19 @@ func cb_on_pressed(which_sensor:MobileSensors, toggle_on:bool) -> void:
 	print(project_settings_map[which_sensor])
 	print("is toggle on %s" % toggle_on)
 	ProjectSettings.set_setting(project_settings_map[which_sensor], toggle_on)
+	change_label_color(top_label,Color(0.854, 0.091, 0.586, 1.0))
+	change_label_shadow(top_label, Color(0.0, 0.0, 0.0, 1.0))
+	change_label_outline(top_label, Color(1.0, 1.0, 1.0, 1.0))
+	pass
+
+func change_label_color(_label:Label,new_color : Color) -> void:
+	_label.add_theme_color_override("font_color", new_color)
+	pass
+
+func change_label_shadow(_label:Label ,new_color : Color) -> void:
+	_label.add_theme_color_override("font_shadow_color", new_color)
+	pass
+
+func change_label_outline(_label:Label ,new_color : Color) -> void:
+	_label.add_theme_color_override("font_outline_color", new_color)
+	pass
