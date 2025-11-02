@@ -43,6 +43,7 @@ func add_ui_to_window(window_:Window) -> void:
 	var height_button: Button = Button.new()
 	
 	width_button.modulate = Color(0.702, 0.129, 0.918, 1.0)
+	width_button.text =  "confirm width"
 	width_button.pressed.connect(
 		func():
 			width_field.text_submitted.emit(width_field.text)
@@ -50,6 +51,7 @@ func add_ui_to_window(window_:Window) -> void:
 	)
 	
 	height_button.modulate = Color(0.702, 0.129, 0.918, 1.0)
+	height_button.text = "confirm height"
 	height_button.pressed.connect(
 		func():
 			height_field.text_submitted.emit(height_field.text)

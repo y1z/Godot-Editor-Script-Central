@@ -28,6 +28,7 @@ const folder_colors := {
 
 # Called when the script is executed (using File -> Run in Script Editor).
 func _run() -> void:
+	
 	if generate_directories():
 		color_folders()
 	pass
