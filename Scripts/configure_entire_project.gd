@@ -28,6 +28,10 @@ const folder_colors := {
 const window_title :String = "Configure entire project"
 const window_size : Vector2i = Vector2i(500, 700)
 
+var cb_default_function := Callable (default_button_function)
+
+const default_ui_size:Vector2i = Vector2i(100,100)
+
 
 # Called when the script is executed (using File -> Run in Script Editor).
 func _run() -> void:
@@ -41,7 +45,7 @@ func _run() -> void:
 	add_ui_to_window(window)
 	EditorInterface.popup_dialog_centered(window, window.size)
 
-
+#region CREATE PROJECT FOLDERS
 func generate_directories() -> bool:
 	print("generating folders for project")
 	var result: bool = false
@@ -75,17 +79,14 @@ func create_project_folders() ->void :
 	if generate_directories():
 		color_folders()
 	pass
+#endregion
 
-func add_button(name : String, size :Vector2i, call_back_function : Callable ) -> Button:
+#region ADD UI ELEMENTS
+func add_button(name : String, size :Vector2i, call_back_function : Callable  = default_button_function ) -> Button:
 	var result : Button = Button.new()
 	result.text = name
 	result.size = size
-	print("is null = %s"% call_back_function.is_null())
-	print("is valid = %s" % call_back_function.is_valid())
-	print("is custom = %s" % call_back_function.is_custom())
-	print("is standard = %s" % call_back_function.is_standard())
-	print("method is = %s" % call_back_function.get_method())
-	print("call argument count is = %s" % call_back_function.get_argument_count())
+	callable_info_print(call_back_function)
 	if call_back_function.is_null():
 		call_back_function = func(): print("pressed button")
 
@@ -100,20 +101,84 @@ func add_button(name : String, size :Vector2i, call_back_function : Callable ) -
 	
 	return result
 
-func default_button_function() -> void:
-	print("button pressed")
+func add_line_edit(size:Vector2i ,call_back :Callable = default_line_edit_function ) -> LineEdit:
+	var result : LineEdit = LineEdit.new()
+	result.size = size
+	result.text_submitted.connect(
+		func(input_text:String):
+			call_back.call(input_text)
+	)
+	return result
+
+func add_hbox(elements: Array[Control]) -> HBoxContainer:
+	var result : HBoxContainer = HBoxContainer.new()
+	for e in elements:
+		result.add_child(e)
+	return result
+
+## THIS HAS TO BE STATIC OR we get the following error `ERROR: res://Scripts/configure_entire_project.gd:96 - Attempt to call function 'null::default_button_function (Callable)' on a null instance.`
+static func default_button_function() -> void:
+	print("Default Button pressed function")
+
+static func default_line_edit_function(input_string : String) -> void:
+	print("Current input text = %s" % input_string)
+
+#endregion
+
+
 
 func add_ui_to_window(window: Window) -> void :
 	var vbox : VBoxContainer = VBoxContainer.new()
 	var control : Control = Control.new()
 	control.add_child(vbox)
-	print("callable")
-
+	
+	vbox.add_child(
+		add_button("save and reset",
+		Vector2i(100,100),
+		func():
+			ProjectSettings.save()
+			EditorInterface.restart_editor(true)
+			)
+	)
+	
 	vbox.add_child(
 		add_button("create folders",
 		Vector2i(100,100),
 		func():create_project_folders()
 	))
 	
+	var line_edith_width := add_line_edit(default_ui_size, func(input_text:String):change_viewport_size(true, input_text.to_int()) )
+	var width_text_input :HBoxContainer = add_hbox([
+		line_edith_width,
+		add_button("confirm width",default_ui_size, func():line_edith_width.text_submitted.emit(line_edith_width.text)),
+		 ])
+
+	
+	var line_edith_height := add_line_edit(default_ui_size, func(input_text:String):change_viewport_size(false, input_text.to_int()) )
+	var height_text_input :HBoxContainer = add_hbox([
+		line_edith_height,
+		add_button("confirm height",default_ui_size, func():line_edith_height.text_submitted.emit(line_edith_height.text)),
+		 ])
+
+	vbox.add_child(width_text_input)
+	vbox.add_child(height_text_input)
 	window.add_child(control)
+	pass
+
+func callable_info_print(call_back_function: Callable) -> void:
+	print("is null = %s"% call_back_function.is_null())
+	print("is valid = %s" % call_back_function.is_valid())
+	print("is custom = %s" % call_back_function.is_custom())
+	print("is standard = %s" % call_back_function.is_standard())
+	print("method is = %s" % call_back_function.get_method())
+	print("call argument count is = %s" % call_back_function.get_argument_count())
+	pass
+
+func change_viewport_size(should_change_width : bool , new_size:int) -> void:
+	if should_change_width:
+		print("change width = %s" % new_size)
+		ProjectSettings.set_setting("display/window/size/viewport_width", new_size)
+	else:
+		print("change height = %s" % new_size)
+		ProjectSettings.set_setting("display/window/size/viewport_height", new_size)
 	pass
