@@ -26,7 +26,7 @@ func _run() -> void:
 	var window : Window  = Window.new()
 	window.title = window_title
 	window.close_requested.connect(
-		func():
+		func() -> void:
 			window.queue_free()
 	)
 
@@ -37,7 +37,7 @@ func _run() -> void:
 	
 	add_ui_to_window(window)
 	
-	for sensor in MobileSensors.keys():
+	for sensor:MobileSensors in MobileSensors.keys():
 		print("is %s enabled %s" % [sensor,is_sensor_enabled(MobileSensors.get(sensor))])
 
 	
@@ -55,12 +55,12 @@ func add_ui_to_window(_window:Window) -> void:
 	vbox.add_child(top_label)
 	control.add_child(vbox)
 	# for some reason we have to use the MobileSensors.value() to get the VALUE of the desired enum
-	for sensor in MobileSensors.values():
+	for sensor:MobileSensors in MobileSensors.values():
 		vbox.add_child(create_sensor_row(sensor))
 
 	var save_and_restart_button : Button = Button.new()
 	save_and_restart_button.pressed.connect(
-		func():
+		func() -> void:
 			ProjectSettings.save()
 			EditorInterface.save_all_scenes()
 			EditorInterface.restart_editor(true)
@@ -88,7 +88,7 @@ func create_sensor_row(which_sensor : MobileSensors) -> HBoxContainer:
 	var sensor_check_button : CheckButton = CheckButton.new()
 	sensor_check_button.button_pressed = is_sensor_enabled(which_sensor)
 	sensor_check_button.toggled.connect(
-		func(toggle_on:bool):
+		func(toggle_on:bool) -> void:
 			cb_on_pressed(which_sensor, toggle_on)
 	)
 	result.add_child(sensor_check_button)

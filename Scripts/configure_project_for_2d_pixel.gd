@@ -28,7 +28,7 @@ func _run() -> void:
 	var window : Window  = Window.new()
 	window.title = window_title
 	window.close_requested.connect(
-		func():
+		func() -> void:
 			window.queue_free()
 	)
 	
@@ -55,7 +55,7 @@ func add_ui_to_window(window_:Window) -> void:
 	width_button.modulate = Color(0.702, 0.129, 0.918, 1.0)
 	width_button.text =  "confirm width"
 	width_button.pressed.connect(
-		func():
+		func() -> void:
 			width_field.text_submitted.emit(width_field.text)
 			print("'text_submitted' emited")
 	)
@@ -63,13 +63,13 @@ func add_ui_to_window(window_:Window) -> void:
 	height_button.modulate = Color(0.702, 0.129, 0.918, 1.0)
 	height_button.text = "confirm height"
 	height_button.pressed.connect(
-		func():
+		func() -> void:
 			height_field.text_submitted.emit(height_field.text)
 			print("'text_submitted' emited")
 	)
 	
 	width_field.text_submitted.connect(
-		func(size_text:String):
+		func(size_text:String) -> void:
 			cb_text_submitted(size_text, true)
 			pass
 	)
@@ -77,7 +77,7 @@ func add_ui_to_window(window_:Window) -> void:
 
 	
 	height_field.text_submitted.connect(
-		func(size_text:String):
+		func(size_text:String) -> void:
 			cb_text_submitted(size_text, false)
 			pass
 	)

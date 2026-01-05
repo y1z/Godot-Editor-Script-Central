@@ -39,7 +39,7 @@ func _run() -> void:
 	window.title = window_title
 	window.size = window_size
 	window.close_requested.connect(
-		func():
+		func() -> void:
 			window.queue_free()
 	)
 	add_ui_to_window(window)
@@ -88,14 +88,14 @@ func add_button(name : String, size :Vector2i, call_back_function : Callable  = 
 	result.size = size
 	callable_info_print(call_back_function)
 	if call_back_function.is_null():
-		call_back_function = func(): print("pressed button")
+		call_back_function = func() -> void: print("pressed button")
 
 	if call_back_function.get_argument_count() != 0:
 		printerr("Can only use callables with zero arguments")
 		assert(false)
 	
 	result.pressed.connect(
-		func():
+		func() -> void:
 			call_back_function.call()
 	)
 	
@@ -105,7 +105,7 @@ func add_line_edit(size:Vector2i ,call_back :Callable = default_line_edit_functi
 	var result : LineEdit = LineEdit.new()
 	result.size = size
 	result.text_submitted.connect(
-		func(input_text:String):
+		func(input_text:String) -> void:
 			call_back.call(input_text)
 	)
 	return result
@@ -135,7 +135,7 @@ func add_ui_to_window(window: Window) -> void :
 	vbox.add_child(
 		add_button("save and reset",
 		Vector2i(100,100),
-		func():
+		func() -> void:
 			ProjectSettings.save()
 			EditorInterface.restart_editor(true)
 			)
@@ -144,20 +144,31 @@ func add_ui_to_window(window: Window) -> void :
 	vbox.add_child(
 		add_button("create folders",
 		Vector2i(100,100),
-		func():create_project_folders()
+		func() -> void:create_project_folders()
 	))
 	
-	var line_edith_width := add_line_edit(default_ui_size, func(input_text:String):change_viewport_size(true, input_text.to_int()) )
+	var line_edit_width := add_line_edit(default_ui_size,
+	 func(input_text:String) -> void:
+		change_viewport_size(true, input_text.to_int()
+		) )
 	var width_text_input :HBoxContainer = add_hbox([
-		line_edith_width,
-		add_button("confirm width",default_ui_size, func():line_edith_width.text_submitted.emit(line_edith_width.text)),
+		line_edit_width,
+		add_button("confirm width",default_ui_size,
+		 func() -> void:
+			line_edit_width.text_submitted.emit(line_edit_width.text)),
 		 ])
 
 	
-	var line_edith_height := add_line_edit(default_ui_size, func(input_text:String):change_viewport_size(false, input_text.to_int()) )
+	var line_edit_height := add_line_edit(default_ui_size, 
+	func(input_text:String) -> void:
+		change_viewport_size(false, input_text.to_int()) 
+		)
+
 	var height_text_input :HBoxContainer = add_hbox([
-		line_edith_height,
-		add_button("confirm height",default_ui_size, func():line_edith_height.text_submitted.emit(line_edith_height.text)),
+		line_edit_height,
+		add_button("confirm height",default_ui_size, 
+		func() -> void:
+			line_edit_height.text_submitted.emit(line_edit_height.text)),
 		 ])
 
 	vbox.add_child(width_text_input)
