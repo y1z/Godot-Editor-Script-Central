@@ -6,13 +6,23 @@ const window_size:Vector2i = Vector2i(500,500)
 const window_title:String = "select resolution"
 
 const error_position_value:int = -2147483647;
+const default_texture_filter_path :="rendering/textures/canvas_textures/default_texture_filter"
+const window_stretch_mode_path := "display/window/stretch/mode";
+const window_stretch_aspect_path := "display/window/stretch/aspect";
 
 # Called when the script is executed (using File -> Run in Script Editor).
 func _run() -> void:
-	print_rich("[i]configuring project for 2D[/i]")
-	ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", "Nearest")
-	ProjectSettings.set_setting("display/window/stretch/mode", "canvas_items")
-	ProjectSettings.set_setting("display/window/stretch/aspect", "keep")
+	print_rich("[color=FFFFFFFF][i]Configuring project for 2D[/i][/color]")
+	
+	ProjectSettings.set_setting(default_texture_filter_path, "Nearest")
+	print_rich("[color=BB5511FF][i]Configuring default texture filter to = '%s' [/i][/color]" % ProjectSettings.get_setting(default_texture_filter_path))
+	
+	ProjectSettings.set_setting(window_stretch_mode_path, "canvas_items")
+	print_rich("[color=1199BBFF][i]Configuring window stretch mode to = '%s'[/i][/color]" % ProjectSettings.get_setting(window_stretch_mode_path))
+
+	ProjectSettings.set_setting(window_stretch_aspect_path, "keep")
+	print_rich("[color=FFFFFFFF][i]Configuring windows aspect to = '%s' [/i][/color]" % ProjectSettings.get_setting(window_stretch_aspect_path))
+
 	print_rich("[b]FINISHED[/b]")
 	
 	var window : Window  = Window.new()
